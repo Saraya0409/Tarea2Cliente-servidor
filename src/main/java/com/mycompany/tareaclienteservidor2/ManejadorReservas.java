@@ -6,43 +6,84 @@ package com.mycompany.tareaclienteservidor2;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author armi8
- */
 public class ManejadorReservas {
+
     private final ArrayList<Reserva> listaReservas = new ArrayList<>();
     private static final int TAMANIO_BLOQUE = 5;
 
-    public synchronized void agregarReservaConcurrente(Usuario usuario) {
-        Thread reservaThread;
-        reservaThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // Obtener datos de la reserva
-                String fechaComida = JOptionPane.showInputDialog("Ingrese la fecha de la comida (DD/MM/YYYY): ");
-                String tipoComida = JOptionPane.showInputDialog("Ingrese el tipo de comida (Desayuno/Almuerzo/Cena): ");
-                String guarnicion1 = JOptionPane.showInputDialog("Ingrese la primera guarnición (Arroz/Frijoles/Pancakes/Frutas): ");
-                String guarnicion2 = JOptionPane.showInputDialog("Ingrese la segunda guarnición (Arroz/Frijoles/Pancakes/Frutas): ");
-                String proteina = JOptionPane.showInputDialog("Ingrese la proteína (Carne/Pescado/Pollo/Huevos): ");
-                String ensalada = JOptionPane.showInputDialog("Ingrese el tipo de ensalada (Verde/Rusa): ");
-                
-                // Crear reserva
-                Reserva reserva = new Reserva(usuario.getCedula(), fechaComida, tipoComida, guarnicion1, guarnicion2, proteina, ensalada);
-                
-                // Agregar reserva a la lista
-                synchronized (listaReservas) {
-                    listaReservas.add(reserva);
-                }
-                
-                // Guardar reserva en archivo
-                guardarReservaEnArchivo(reserva);
+    public void agregarReservaConcurrente(Usuario usuario) {
+
+        String fechaComida;
+        do {
+            fechaComida = JOptionPane.showInputDialog("Ingrese la fecha de la comida (DD/MM/YYYY): ");
+            if (!validarFormatoFecha(fechaComida)) {
+                JOptionPane.showMessageDialog(null, "Formato de fecha inválido. Ingrese la fecha en formato DD/MM/YYYY.");
+                continue;
             }
-        });
-        reservaThread.start();
+            if (!validarFechaUnica(fechaComida)) {
+                JOptionPane.showMessageDialog(null, "Ya existe una reserva para la fecha ingresada. Ingrese una fecha diferente.");
+                continue;
+            }
+            break;
+        } while (true);
+
+        String[] tiposComida = {"Desayuno", "Almuerzo", "Cena"};
+        String tipoComida = (String) JOptionPane.showInputDialog(null,
+                "Seleccione el tipo de comida:",
+                "Tipo de Comida",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                tiposComida,
+                tiposComida[0]);
+
+        String[] guarniciones = {"Arroz", "Frijoles", "Pancakes", "Frutas"};
+        String guarnicion1 = (String) JOptionPane.showInputDialog(null,
+                "Seleccione la primera guarnición:",
+                "Guarnición 1",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                guarniciones,
+                guarniciones[0]);
+
+        String guarnicion2 = (String) JOptionPane.showInputDialog(null,
+                "Seleccione la segunda guarnición:",
+                "Guarnición 2",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                guarniciones,
+                guarniciones[0]);
+
+        String[] proteinas = {"Carne", "Pescado", "Pollo", "Huevos"};
+        String proteina = (String) JOptionPane.showInputDialog(null,
+                "Seleccione la proteína:",
+                "Proteína",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                proteinas,
+                proteinas[0]);
+
+        String[] ensaladas = {"Verde", "Rusa"};
+        String ensalada = (String) JOptionPane.showInputDialog(null,
+                "Seleccione el tipo de ensalada:",
+                "Ensalada",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                ensaladas,
+                ensaladas[0]);
+
+        Reserva reserva = new Reserva(usuario.getCedula(), fechaComida, tipoComida, guarnicion1, guarnicion2, proteina, ensalada);
+
+        synchronized (listaReservas) {
+            listaReservas.add(reserva);
+        }
+
+        guardarReservaEnArchivo(reserva);
     }
 
     public void agregarBloqueReservasConcurrentes(Usuario usuario, int cantidadReservas) {
@@ -64,7 +105,7 @@ public class ManejadorReservas {
         }
     }
 
-    private synchronized void guardarReservaEnArchivo(Reserva reserva) {
+    private void guardarReservaEnArchivo(Reserva reserva) {
         try (FileWriter writer = new FileWriter("reservas.txt", true)) {
             writer.write("Cédula de usuario: " + reserva.getCedulaUsuario() + "\n");
             writer.write("Fecha de comida: " + reserva.getFechaComida() + "\n");
@@ -78,5 +119,23 @@ public class ManejadorReservas {
             e.printStackTrace();
         }
     }
-    
+
+    private boolean validarFormatoFecha(String fecha) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate.parse(fecha, formatter);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
+
+    private synchronized boolean validarFechaUnica(String fecha) {
+        for (Reserva reserva : listaReservas) {
+            if (reserva.getFechaComida().equals(fecha)) {
+                return false; 
+            }
+        }
+        return true; 
+    }
 }

@@ -1,0 +1,12 @@
+Cédula de usuario: 55
+Nombre de usuario: Armando
+Número de teléfono: 7894
+
+Cédula de usuario: 55
+Nombre de usuario: Armando
+Número de teléfono: 7894
+
+Cédula de usuario: 88
+Nombre de usuario: Jose
+Número de teléfono: 20224
+
