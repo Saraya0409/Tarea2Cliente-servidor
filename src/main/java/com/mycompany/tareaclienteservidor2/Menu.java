@@ -12,33 +12,38 @@ import javax.swing.JOptionPane;
  * @author yagoa
  */
 public class Menu {
-
-    int op;
-    Usuario usuarioNuevo = new Usuario();
-    ArrayList<Usuario> listaTemporal = new ArrayList<>();
+private int op;
+    private Usuario usuarioNuevo = new Usuario();
+    private ArrayList<Usuario> listaTemporal = new ArrayList<>();
 
     public void menu() {
-        while (op != 3) {
-            op = Integer.parseInt(JOptionPane.showInputDialog(null, "Menu Principal\n"
-                    + "1.Agregar Usuario\n"
-                    + "2.Agregar Reservas\n"
-                    + "3.Salir\n"
-                    + "\nDigite la opcion deseada: ", "Restaurante Administracion", JOptionPane.QUESTION_MESSAGE));
-            switch (op) {
-                case 1:
-                    usuarioNuevo.agregarUsuario(listaTemporal);
-
-                    break;
-                case 2:
-
-                    break;
-                case 3:
-                    System.exit(0);
-                default:
-                    JOptionPane.showMessageDialog(null, "Error opcion invalida", "Eror",
-                            JOptionPane.ERROR_MESSAGE);
-            }
-
+            while (op != 3) {
+        op = Integer.parseInt(JOptionPane.showInputDialog(null, "Menu Principal\n"
+                + "1. Agregar Usuario\n"
+                + "2. Agregar Reservas\n"
+                + "3. Salir\n"
+                + "\nDigite la opción deseada: ", "Restaurante Administracion", JOptionPane.QUESTION_MESSAGE));
+        switch (op) {
+            case 1:
+                usuarioNuevo.agregarUsuario(listaTemporal);
+                break;
+            case 2:
+                if (!listaTemporal.isEmpty()) {
+                    ManejadorReservas manejadorReservas = new ManejadorReservas();
+                    for (Usuario usuario : listaTemporal) {
+                        manejadorReservas.agregarReservaConcurrente(usuario);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "No hay usuarios registrados para realizar reservas.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                break;
+            case 3:
+                System.exit(0);
+            default:
+                JOptionPane.showMessageDialog(null, "Error opción inválida", "Error",
+                        JOptionPane.ERROR_MESSAGE);
         }
     }
+}
 }

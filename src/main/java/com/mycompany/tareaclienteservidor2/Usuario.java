@@ -13,10 +13,8 @@ import java.util.ArrayList;
  * @author yagoa
  */
 public class Usuario {
-
-    private String cedula, nombre;
+private String cedula, nombre;
     private int numeroTelefono;
-    
 
     public Usuario() {
     }
@@ -45,18 +43,16 @@ public class Usuario {
         this.numeroTelefono = numeroTelefono;
     }
 
-
-
     public void agregarUsuario(ArrayList<Usuario> listaTemporal) {
         do {
-             Usuario nuevoUsuario = new Usuario();
+            Usuario nuevoUsuario = new Usuario();
             nuevoUsuario.setNombre(JOptionPane.showInputDialog("Ingrese el nombre del cliente/usario: "));
             nuevoUsuario.setCedula(JOptionPane.showInputDialog("Ingrese la cedula del cliente/usario: "));
-            try{
-            nuevoUsuario.setNumeroTelefono(Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero telefonico del cliente/usario: ")));
-            }catch(NumberFormatException e){
+            try {
+                nuevoUsuario.setNumeroTelefono(Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero telefonico del cliente/usario: ")));
+            } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Ingrese un valor valido para el numero");
-                continue; 
+                continue;
             }
 
             listaTemporal.add(nuevoUsuario);
@@ -69,15 +65,16 @@ public class Usuario {
             }
         } while (true);
     }
-    public void guardarUsuarioArchivo(ArrayList<Usuario> listaTemporal){
-        try(BufferedWriter archivo = new BufferedWriter(new FileWriter("usuarios.txt", true))){
-            for (Usuario usuario:listaTemporal) {
-                String usuarioInfo = "Cedula de usuario: "+usuario.getCedula() + "," +"Nombre de usuario: "+ usuario.getNombre() + "," +" Numero de telefono: "+ usuario.getNumeroTelefono()+"\n";
-               archivo.write(usuarioInfo);
+
+    public void guardarUsuarioArchivo(ArrayList<Usuario> listaTemporal) {
+        try (BufferedWriter archivo = new BufferedWriter(new FileWriter("usuarios.txt", true))) {
+            for (Usuario usuario : listaTemporal) {
+                String usuarioInfo = "Cedula de usuario: " + usuario.getCedula() + "," + "Nombre de usuario: " + usuario.getNombre() + "," + " Numero de telefono: " + usuario.getNumeroTelefono() + "\n";
+                archivo.write(usuarioInfo);
             }
-             JOptionPane.showMessageDialog(null, "Usuarios guardados exitosamente en el archivo.");
-        }catch(IOException e){
+            JOptionPane.showMessageDialog(null, "Usuarios guardados exitosamente en el archivo.");
+        } catch (IOException e) {
             e.printStackTrace();
-        } 
+        }
     }
 }
