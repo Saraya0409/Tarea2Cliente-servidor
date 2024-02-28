@@ -1,1 +1,1 @@
-Pratica 2 evaluda en Grupo Santiago Araya y Armadndo Solano
+Pratica 2 evaluada en Grupo Santiago Araya y Armando Solano
