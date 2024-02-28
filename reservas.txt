@@ -1,0 +1,16 @@
+Cédula de usuario: 55
+Fecha de comida: 28/02/2024
+Tipo de comida: Desayuno
+Guarnición 1: Arroz
+Guarnición 2: Arroz
+Proteína: Carne
+Ensalada: Verde
+
+Cédula de usuario: 88
+Fecha de comida: 28/03/2024
+Tipo de comida: Desayuno
+Guarnición 1: Arroz
+Guarnición 2: Arroz
+Proteína: Carne
+Ensalada: Verde
+

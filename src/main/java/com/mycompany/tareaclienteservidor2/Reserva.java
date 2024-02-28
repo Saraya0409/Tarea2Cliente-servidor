@@ -8,9 +8,8 @@ package com.mycompany.tareaclienteservidor2;
  *
  * @author armi8
  */
-public class Reserva {
-
-    private String cedulaUsuario;
+class Reserva {
+     private String cedulaUsuario;
     private String fechaComida;
     private String tipoComida;
     private String guarnicion1;
